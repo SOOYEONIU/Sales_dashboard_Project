@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{ margin: 0; padding: 0;}
+		</style>
+	</head>
+	
+	<body>
+
+	<script>
+		/*function yo() {
+			setTimeout(function() {
+				console.log('1.5초 타이머 끝!')
+			}, 1500);
+			
+			for(let i=0; i<3; i++) {
+				console.log(i)
+			}
+			console.log('3초걸리는 for문 끝!')
+		}
+		yo();
+		console.log('main 끝!')*/
+	/*	function aaa() {
+			console.log("aaa");
+		}
+
+		let delay = 0; 
+		for(let i=0; i<24; i++){
+			delay += 1000;
+			setTimeout(aaa(), delay);
+		}*/
+
+		const data =[1,2,3,4,5];
+		for(let i=0; i<data.length; i++) {
+			setTimeout(()=> {
+				console.log(i)
+			}, i*1000);
+		}
+	</script>
+	</body>
+</html>

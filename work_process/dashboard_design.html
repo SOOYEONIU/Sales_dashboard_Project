@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8">
+		<link ="stylesheet" type="text/css" href="path/to/xeicon/xeicon.min.css">
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+		<title>Sales Dashboard</title>
+		<style>
+			*{ margin: 0; padding: 0; font-family: 'SUIT-Regular'; list-style:none;}
+			/*제목 글씨체*/
+			@font-face {
+ 			   font-family: 'Cafe24Dangdanghae';
+			   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.2/Cafe24Dangdanghae.woff') format('woff');
+			   font-weight: normal;
+ 			   font-style: normal;
+			}
+			/*본문체*/
+			@font-face {
+ 			   font-family: 'SUIT-Regular';
+			   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+			   font-weight: normal;
+ 			   font-style: normal;
+			}
+			body {
+				/*background: linear-gradient(45deg, white, #3b3b67);*/
+				width: 100%;
+				background-color: #3b3b67;
+				
+			}
+			/*매출 대시보드 큰 틀*/
+			.salesDashBoard {
+				color: #333;
+				min-height: 100vh;
+				display: flex;
+				justify-content: center; align-items: center;
+			}
+			/*배경 틀*/
+			.backgroundBoard {
+				width: 1375px; height: 620px;
+				background-color: pink;
+			}
+			/*큰 제목*/
+			.headerName {
+				font-size: 30px;
+			    font-family: 'Cafe24Dangdanghae';
+				padding-left: 10%; padding-top: 20px;
+   			}
+			/*오늘 총매출& 주문수*/
+			.todayData {
+				width: 40%; height: 30%;
+				/*background-color: gray;*/
+				position: absolute;
+				left: 10%; 
+			}
+				.todaySales, .todayOrder {
+					width: 400px; height: 180px;
+					background-color: rgb(249, 243, 231);
+					border-radius: 10px;
+					display: inline-block;	float: left;
+					padding-left: 5px;	padding-right: 5px;
+					margin: 8px;
+					text-align: center;
+					line-height: 60px;
+				}
+					.salesTitle { font-size: 20px; }
+					.todaySalesPrice { font-size: 40px; font-weight: bold; }
+					.yesterdaySales { font-size: 18px; }
+					/*매줄이나 주문수가 떨어지면 파란색, 화살표 아래 방향으로 표시*/
+					.percentValue { font-size: 18px; color: red;  }
+	
+			/*최근 14일 매출현황*/
+			.salesStatus {
+					width: 835px; height: 350px;
+					background-color: rgb(249, 243, 231);
+					border-radius: 10px;
+					margin: 8px;
+					position: absolute;
+					top: 45%; left: 10%;
+			}
+			/*매출현황 도표 제목*/
+			h5 { 
+				font-size: 30px; 
+				padding-left: 30px; padding-top: 20px;
+				position: relative;
+			}
+			/*최근14일*/
+			h5 > span { font-size: 15px; margin-left: 10px; }
+			/*캔버스로 그래프 만들기 예비값*/
+			.salesGraphCanvas {
+				width: 750px; height: 250px;
+				background-color: gray;
+				position: absolute;
+				top: 75px; left: 30px;
+			}
+		
+			/*판매 상품 순위 top10(오늘 기준)*/
+			.salesRankingTable {
+				width: 430px; height: 600px;
+				background-color: rgb(249, 243, 231);
+				border-radius: 10px;
+				position: absolute;
+				left: 200px; top: 8%;
+				margin: 8px;
+			}
+
+		</style>
+	</head>
+	
+	<body>
+		<!--매출 대시보드 큰 틀-->
+		<div id="salesDashBoard" class="salesDashBoard">
+		<!--배경틀-->	
+			<div class="backgroundBoard">	
+				<!--header-->
+				<h2 class="headerName">Sales Dashboard</h2>
+
+				<!--오늘 총매출 & 주문수 -->
+				<div id="todayData" class="todayData">
+					<div id="todaySales" class="todaySales">
+						<div class="salesTitle">오늘 총매출(원)</div>
+						<div id="todaySalesPrice" class="todaySalesPrice">25,254,000</div>
+						<div class="yesterdaySales">어제 대비<span id="salesPercent" class="percentValue"><i class="xi-caret-up"></i> 00%</span></div>
+					</div>
+					<div id="todayOrder" class="todayOrder">
+						<div class="salesTitle">오늘 주문수(건)</div>
+						<div id="todaySalesPrice" class="todaySalesPrice">288</div>
+						<div class="yesterdaySales">어제 대비<span id="orderPercent" class="percentValue"><i class="xi-caret-up"></i>00%</span></div>
+					</div>
+				</div>
+				<!--오늘 총매출 & 주문수 -->
+
+				<!--최근 2주간 매출현황 그래프-->
+				<div id="salesStatus" class="salesStatus">
+					<h5>매출현황<span>최근 14일( 2023.00.00 ~ 2023.00.00 )</span></h5>
+					<div id="salesGraphCanvas" class="salesGraphCanvas">canvasZone</div>
+				</div>
+				<!--최근 2주간 매출현황 그래프-->
+
+
+				<!--판매 상품 순위 TOP10 (오늘기준)-->
+				<div id="salesRankingTable" class="salesRankingTable">
+					<h3>판매 상품 순위 TOP 10<span>오늘 기준</span></h3>
+				<!--	<div id="productRankingTable" class="productRankingTable">
+						<ul class="categorizeName">
+							<li class="rankingTitle">순위</li>
+							<li class="productName">상품명</li>
+							<li class="productCount">판매량<span>(개)</span></li>
+						</ul>
+						<ul class="productInfo">
+							<li id="rankingInfo" class="rankingInfo">1</li>
+							<li id="productInfo" class="productInfo">상품1</li>
+							<li id="salesCount"class="salesCount">6,500</li>
+						</ul>
+						<ul class="productInfo">
+							<li class="rankingInfo">2</li>
+							<li class="productInfo">상품2</li>
+							<li class="salesCount">5,870</li>
+						</ul>
+						<ul class="productInfo">	
+							<li class="rankingInfo">3</li>
+							<li class="productInfo">상품3</li>
+							<li class="salesCount">3,012</li>
+						</ul>
+						<ul class="productInfo">
+							<li class="rankingInfo">4</li>
+							<li class="productInfo">상품4</li>
+							<li class="salesCount">3,001</li>
+						</ul>
+						<ul class="productInfo">
+							<li class="rankingInfo">5</li>
+							<li class="productIfno">상품5</li>
+							<li class="salesCount">1,562</li>
+						</ul>
+						<ul class="produtInfo">
+							<li class="rankingInfo">6</li>
+							<li class="productInfo">상품6</li>
+							<li class="salesCount">576</li>
+						</ul>
+						<ul class="productInfo">
+							<li class="rankingInfo">7</li>
+							<li class="productInfo">상품7</li>
+							<li class="salesCount">345</li>
+						</ul>
+						<ul class="productInfo">
+							<li class="rankingInfo">8</li>
+							<li class="productInfo">상품8</li>
+							<li class="salesCount">290</li>
+						</ul>
+						<ul class="productInfo">
+							<li class="rankingInfo">9</li>
+							<li class="productInfo">상품9</li>
+							<li class="salesCount">45</li>
+						</ul>
+						<ul class="productInfo">
+							<li class="rankingInfo">10</li>
+							<li class="productInfo">상품10</li>
+							<li class="salesCount">43</li>
+						</ul>
+					</div>
+					-->
+				</div>
+				<!--판매 상품 순위 TOP10 (오늘 기준)-->
+			</div>
+			<!--배경틀-->
+		</div>
+		<!--매출 대시보드 큰 틀-->
+	<script>
+	</script>
+	</body>
+</html>

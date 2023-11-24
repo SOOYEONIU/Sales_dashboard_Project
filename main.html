@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+		<link rel="icon" href="./img/dashboard_favicon.png" type="image/x-icon">
+
+
+		<title>Sales Dashboard</title>
+		<style>
+			*{ margin: 0; padding: 0; font-family: 'SUIT-Regular'; list-style:none;}
+			
+			/*제목 글씨체*/
+			@font-face {
+ 			   font-family: 'Cafe24Dangdanghae';
+			   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.2/Cafe24Dangdanghae.woff') format('woff');
+			   font-weight: normal;
+ 			   font-style: normal;
+			}
+			/*본문체*/
+			@font-face {
+ 			   font-family: 'SUIT-Regular';
+			   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+			   font-weight: normal;
+ 			   font-style: normal;
+			}
+			
+			/*배경색*/
+			body {
+				background-color: #F5F6FA;
+				width: 100vw;
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			/*매출 대시보드 큰 틀*/
+			.salesDashBoard {
+				width: 100vw;
+				height: 100vh;
+				color: #333;
+				background-color: rgba(245, 238, 226, 0.5);
+			}
+			
+			/*배경 틀*/
+			.backgroundBoard {
+				width: 90vw; height: 82.5vh;
+				position: absolute;
+				top: 50%; left: 50%;
+				margin-top: -41.25vh; margin-left: -45vw;
+				display: flex;
+			}
+			.leftZone {
+				width: 55vw; height: 82.5vh;
+			}
+			
+			/*Dashboard 제목*/
+			.headerName {
+				width: 90%;
+				height: 5.5vh;
+				color: #333;
+				font-family: 'Cafe24Dangdanghae';
+				font-size: 5vh;
+			}
+				/*오늘 날짜*/
+				[id*="todayDate"] {
+					font-size: 15px;
+					padding-left: 5px;
+					margin-right: -5px;
+				}
+			
+			/*오늘 총매출& 주문수*/
+			.todayData {
+				width: 55vw; height: 25vh;
+				/*background-color: skyblue;*/
+				margin-top: 1vh; margin-bottom: 1vh;
+				text-align: center;
+				display: flex;
+				justify-content: space-between;	
+			}
+			
+				.todaySales, .todayOrder {
+					width: 27vw; height: 25vh;
+					border-radius: 10px;
+					line-height: 64px;
+					/*display: block; float: left;*/
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+				}
+				.todaySales { background-color: #EAE9F5; }
+				.todayOrder { 
+					background-color: #F5E8E5;
+					position: relative; 
+				}
+					.salesTitle1 { 
+						color: rgb(85, 79, 165); 
+						font-size: 3vh; 
+						text-align: left; 
+						margin-left: 20px;
+					}
+					.todaySalesPrice1 { 
+						color: rgb(130, 58, 255); 
+						font-size: 3vw; 
+						font-weight: bold; 
+					}
+					.salesTitle2 { 
+						color: rgb(214, 102, 77); 
+						font-size: 3vh; 
+						text-align: left; 
+						margin-left: 20px;
+					}
+					.todaySalesPrice2 { 
+						color: rgb(214, 102, 77); font-size: 3vw; font-weight: bold; 
+					}
+					.yesterdaySales { 
+						font-size: 18px; 
+					}
+					.countSales	{ 
+						font-size: 3vh; color: #ff6d00;
+					}
+					.countOrders { 
+						font-size: 3vh; color: #ff6d00; 
+					}
+		
+			/*시간대별 매출현황*/
+			.salesStatus {
+				width: 55vw; height: 50vh;
+				background-color: #E4F1E6;
+				border-radius: 10px;
+				/*position: relative;*/
+				display: flex;
+				flex-flow: column nowrap;
+				justify-content: center;
+				align-items: center;
+			}
+			
+			/*매출현황 도표 제목*/
+			.titleZone {
+			 	width: 48vw; 
+				/*position: absolute;*/
+			}
+			
+			h5 { 
+				font-size: 30px;	
+				padding-top: 20px; 
+				color: #1b4332;
+			}
+			/*시간대별*/
+			
+			h5 > span { font-size: 15px;	margin-left: 10px; }
+			.lineDetail { 
+				color: #1b4332;
+				display: block; float: right; 
+			}
+
+
+			/*판매 상품 순위 top10(오늘 기준)*/
+			.salesRankingTable {
+				width: 35vw; height: 82.5vh;
+				/*background-color: rgb(249, 243, 231);*/
+				background-color: #DDEBEF;
+				border-radius: 10px;
+				margin-left: 15px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+			.inTable {
+				width: 100%; height: 80vh;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+			.productTalbe {
+  	 	 		height: 6vh;
+			}
+
+			.salesGraphCanvas {
+				width: 100%;
+    			height: 100%;
+    			display: flex;
+    			justify-content: center;
+    			align-items: center;
+			}
+
+				/*소 제목*/
+				h3 {
+					font-size: 3vh;
+					color: #1d3557;
+				}
+				h3 > span {
+					font-size: 12px; font-weight: normal;
+					margin-left: 10px;
+				}
+				
+				/*Table 틀*/
+				.productRankingTable { 
+					width: 30vw;
+					margin-top: 2vh;
+				}
+				ul { display:flex;	line-height: 45px; }
+			
+					
+				/*표 setting*/
+				.categorizeName { 
+					line-height: 20px;
+				}
+				#tempInfo {
+					height: 70vh; 
+					display: flex;
+					flex-direction: column;
+				}
+
+				.rankingTitle { width: 5vw; text-align: center; font-size: 2vh; }
+				.productName { width: 17vw; text-align: center; font-size: 2vh; }
+				.productCount { width: 10vw; text-align: center; font-size: 2vh; }	
+				.rankingInfo { width: 5vw; text-align: center; font-size: 2.5vh; line-height: 6vh;}
+				.productInfo { 
+					width: 17vw; height: 6vh; text-align: left; 
+					padding-left: 5px;
+
+					font-weight: bold; font-size: 2vh; 
+					overflow: hidden; 
+					white-space: nowrap; 
+					text-overflow: ellipsis;
+					line-height: 6vh;
+				}	
+				.salesCount { 
+					width: 5vw; text-align: right; 
+					font-size: 2.5vh;
+					padding-right: 15px;
+					color: red;
+					line-height: 6vh;
+
+				}
+			@media (min-width: 1600px) {
+				.setCanvas {
+					transform: scale(1.3);
+				}
+			}
+			@media (min-width: 601px) and (max-width: 700px) {
+				body {
+					width: 100vw; height: 190vh;
+				}
+				.salesDashBoard {
+					width: 100vw; height: 190vh;
+				}
+
+				.backgroundBoard {
+					display:inline-block;
+				}
+				.headerName {
+					font-size: 5vh;
+					width: 90vw;
+				}
+				.titleDate {
+					display: block;
+				}		
+				.leftZone {
+					width: 90vw; height: 83vh;
+				}
+				.todayData {
+					margin-top: 3vh;
+					width: 90vw;
+				}
+				.todaySales, .todayOrder {
+					width: 43vw;
+				}
+				.salesTitle1, .salesTitle2 {
+					height: 7vh;
+					font-size: 2vh;
+				}
+				.todaySalesPrice1, .todaySalesPrice2 {
+					font-size: 3vh;
+					height: 7vh;
+					line-height: 7vh;
+				}
+				.countOrders, .countSales {
+					height: 5vh;
+					font-size: 2.5vh;
+					line-height: 5vh;
+				}
+				.salesStatus {
+					width: 90vw; height: 47vh;
+					overflow: hidden;
+					display: block;
+				}
+				.titleZone {
+					width: 80vw;
+					margin-left: 3vw;
+					margin-top: 2vh;
+				}
+				.salesRankingTable {
+					width: 90vw;
+					height: 90vh;
+					margin-left: 0px;
+				}
+				.productRankingTable {
+					width: 80vw;
+					height: 70vh;
+				}
+
+				h3 {
+					font-size: 2.5vh;
+				}
+				.categorizeName {
+					margin-top: 2vh;
+				}	
+				.rankingTitle, .rankingInfo {
+					width: 10vw; 
+					line-height: 5.5vh;
+				}
+
+				.productName, .productInfo {
+					width: 55vw;
+					line-height: 5.5vh;
+				}
+
+				.productCount, .salesCount {
+					width: 15vw;
+					line-height: 5.5vh;
+				}
+				
+				.productTalbe {
+					height: 5.5vh;
+				}
+				h5 {
+					font-size: 3vh;
+					padding: 2vh;
+				}
+				.middleTitle {
+					font-size: 2vh;
+				}
+
+				.salesGraphCanvas {
+					width: 100%;
+   	 				height: 100%;
+    				display: flex;
+    				justify-content: center;
+    				align-items: center;
+				}
+				.setCanvas {
+					display: block;
+					transform: scale(1.3);
+   		 			width: 80%;
+					height: 70%;
+					margin-left: 10vw;
+				}
+			}
+			@media (min-width: 503px) and (max-width: 600px) {
+				body {
+					width: 100vw; height: 190vh;
+				}
+				.salesDashBoard {
+					width: 100vw; height: 190vh;
+				}
+
+				.backgroundBoard {
+					display:inline-block;
+				}
+				.headerName {
+					font-size: 5vh;
+					width: 90vw;
+				}
+				.titleDate {
+					display: block;
+				}		
+				.leftZone {
+					width: 90vw; height: 80.5vh;
+				}
+				.todayData {
+					margin-top: 3vh;
+					width: 90vw;
+				}
+				.todaySales, .todayOrder {
+					width: 43vw;
+				}
+				.salesTitle1, .salesTitle2 {
+					margin-top: -1vh;
+					height: 7vh;
+					font-size: 2vh;
+				}
+				.todaySalesPrice1, .todaySalesPrice2 {
+					font-size: 3vh;
+					height: 7vh;
+					line-height: 7vh;
+				}
+				.countOrders, .countSales {
+					height: 5vh;
+					font-size: 2.5vh;
+					line-height: 5vh;
+				}
+				.salesStatus {
+					width: 90vw; height: 45vh;
+					overflow: hidden;
+					display: block;
+				}
+				.titleZone {
+					width: 80vw;
+					margin-left: 3vw;
+					margin-top: 2vh;
+				}
+				.salesRankingTable {
+					width: 90vw;
+					height: 90vh;
+					margin-left: 0px;
+				}
+				.productRankingTable {
+					width: 80vw;
+					height: 70vh;
+				}
+
+				h3 {
+					font-size: 2.5vh;
+				}
+				.categorizeName {
+					margin-top: 2vh;
+				}	
+				.rankingTitle, .rankingInfo {
+					width: 10vw; 
+					line-height: 5.5vh;
+				}
+
+				.productName, .productInfo {
+					width: 55vw;
+					line-height: 5.5vh;
+				}
+
+				.productCount, .salesCount {
+					width: 15vw;
+					line-height: 5.5vh;
+				}
+				
+				.productTalbe {
+					height: 5.5vh;
+				}
+				h5 {
+					font-size: 3vh;
+					padding: 2vh;
+				}
+				.middleTitle {
+					font-size: 2vh;
+				}
+
+				.salesGraphCanvas {
+					width: 100%;
+   	 				height: 100%;
+    				display: flex;
+    				justify-content: center;
+    				align-items: center;
+				}
+				.setCanvas {
+					display: block;
+					transform: scale(1.7);
+   		 			width: 80%;
+					height: 60%;
+					margin-top: 3vh;
+					margin-left: 40vw;
+				}
+			}
+			@media (min-width: 468px) and (max-width: 502px) {
+				body {
+					width: 100vw; height: 190vh;
+				}
+				.salesDashBoard {
+					width: 100vw; height: 190vh;
+				}
+
+				.backgroundBoard {
+					display:inline-block;
+				}
+				.headerName {
+					font-size: 5vh;
+					width: 90vw;
+				}
+				.titleDate {
+					display: block;
+				}		
+				.leftZone {
+					width: 90vw; height: 83vh;
+				}
+				.todayData {
+					margin-top: 3vh;
+					width: 90vw;
+				}
+				.todaySales, .todayOrder {
+					width: 43vw;
+				}
+				.salesTitle1, .salesTitle2 {
+					margin-top: -1vh;
+					height: 7vh;
+					font-size: 2vh;
+				}
+				.todaySalesPrice1, .todaySalesPrice2 {
+					font-size: 3vh;
+					height: 7vh;
+					line-height: 7vh;
+				}
+				.countOrders, .countSales {
+					height: 5vh;
+					font-size: 2.5vh;
+					line-height: 5vh;
+				}
+				.salesStatus {
+					width: 90vw; height: 45vh;
+					overflow: hidden;
+					display: block;
+				}
+				.titleZone {
+					width: 80vw;
+					margin-left: 3vw;
+					margin-top: 2vh;
+				}
+				.salesRankingTable {
+					width: 90vw;
+					height: 90vh;
+					margin-left: 0px;
+				}
+				.productRankingTable {
+					width: 80vw;
+					height: 70vh;
+				}
+
+				h3 {
+					font-size: 2.5vh;
+				}
+				.categorizeName {
+					margin-top: 2vh;
+				}	
+				.rankingTitle, .rankingInfo {
+					width: 10vw; 
+					line-height: 5.5vh;
+				}
+
+				.productName, .productInfo {
+					width: 50vw;
+					line-height: 5.5vh;
+				}
+
+				.productCount, .salesCount {
+					width: 20vw;
+					line-height: 5.5vh;
+				}
+				
+				.productTalbe {
+					height: 5.5vh;
+				}
+				h5 {
+					font-size: 3vh;
+					padding: 2vh;
+				}
+				.middleTitle {
+					font-size: 2vh;
+				}
+
+				.salesGraphCanvas {
+					width: 100%;
+   	 				height: 100%;
+    				display: flex;
+    				justify-content: center;
+    				align-items: center;
+				}
+				.setCanvas {
+					display: block;
+					transform: scale(1.4);
+   		 			width: 100%;
+					height: 62%;
+					margin-top: 3vh;
+					margin-left: 35vw;
+				}
+			}
+			@media (min-width: 400px) and (max-width: 467px) {
+				body {
+					width: 100vw; height: 190vh;
+				}
+				.salesDashBoard {
+					width: 100vw; height: 190vh;
+				}
+
+				.backgroundBoard {
+					display:inline-block;
+				}
+				.headerName {
+					font-size: 5vh;
+					width: 90vw;
+				}
+				.titleDate {
+					display: block;
+				}		
+				.leftZone {
+					width: 90vw; height: 78vh;
+				}
+				.todayData {
+					margin-top: 3vh;
+					width: 90vw;
+				}
+				.todaySales, .todayOrder {
+					width: 43vw;
+				}
+				.salesTitle1, .salesTitle2 {
+					margin-top: -1vh;
+					height: 7vh;
+					font-size: 2vh;
+				}
+				.todaySalesPrice1, .todaySalesPrice2 {
+					font-size: 3vh;
+					height: 7vh;
+					line-height: 7vh;
+				}
+				.countOrders, .countSales {
+					height: 5vh;
+					font-size: 2.5vh;
+					line-height: 5vh;
+				}
+				.salesStatus {
+					width: 90vw; height: 42vh;
+					overflow: hidden;
+					display: block;
+				}
+				.titleZone {
+					width: 80vw;
+					margin-left: 3vw;
+					margin-top: 2vh;
+				}
+				.salesRankingTable {
+					width: 90vw;
+					height: 90vh;
+					margin-left: 0px;
+				}
+				.productRankingTable {
+					width: 80vw;
+					height: 70vh;
+				}
+
+				h3 {
+					font-size: 2.5vh;
+				}
+				.categorizeName {
+					margin-top: 2vh;
+				}	
+				.rankingTitle, .rankingInfo {
+					width: 10vw; 
+					line-height: 5.5vh;
+				}
+
+				.productName, .productInfo {
+					width: 53vw;
+					line-height: 5.5vh;
+				}
+
+				.productCount, .salesCount {
+					width: 17vw;
+					line-height: 5.5vh;
+				}
+				
+				.productTalbe {
+					height: 5.5vh;
+				}
+				h5 {
+					font-size: 3vh;
+					padding: 2vh;
+				}
+				.middleTitle {
+					font-size: 2vh;
+				}
+
+			.salesGraphCanvas {
+				width: 100%;
+    			height: 100%;
+    			display: flex;
+    			justify-content: center;
+    			align-items: center;
+			}
+			.setCanvas {
+				display: block;
+				transform: scale(1.5);
+   		 		width: 95%;
+				height: 55%;
+				margin-top: 3vh;
+				margin-left: 45vw;
+			}
+		}			
+		@media (max-width: 399px) {
+			body {
+				width: 100vw; height: 190vh;
+			}
+			.salesDashBoard {
+				width: 100vw; height: 190vh;
+			}
+
+			.backgroundBoard {
+				display:inline-block;
+			}
+			.headerName {
+				font-size: 5vh;
+				width: 90vw;
+			}
+			.titleDate {
+				display: block;
+			}		
+			.leftZone {
+				width: 90vw; height: 76vh;
+			}
+			.todayData {
+				margin-top: 3vh;
+				width: 90vw;
+			}
+			.todaySales, .todayOrder {
+				width: 43vw;
+			}
+			.salesTitle1, .salesTitle2 {
+				margin-top: -1vh;
+				height: 7vh;
+				font-size: 2vh;
+			}
+			.todaySalesPrice1, .todaySalesPrice2 {
+				font-size: 3vh;
+				height: 7vh;
+				line-height: 7vh;
+			}
+			.countOrders, .countSales {
+				height: 5vh;
+				font-size: 2.5vh;
+				line-height: 5vh;
+			}
+			.salesStatus {
+				width: 90vw; height: 40vh;
+				overflow: hidden;
+				display: block;
+			}
+			.titleZone {
+				width: 80vw;
+				margin-left: 3vw;
+				margin-top: 2vh;
+			}
+			.salesRankingTable {
+				width: 90vw;
+				height: 90vh;
+				margin-left: 0px;
+			}
+			.productRankingTable {
+				width: 80vw;
+				height: 70vh;
+			}
+
+			h3 {
+				font-size: 2.5vh;
+				margin-top: -2vh;
+			}
+			.rankingTitle, .rankingInfo {
+				font-size: 2vh;
+				width: 10vw; 
+				line-height: 5.5vh;
+			}
+
+			.productName {
+				font-size: 2vh;
+				width: 53vw;
+				line-height: 5.5vh;	
+			}
+			.productInfo {
+				font-size: 1.5vh;
+				width: 53vw;
+				line-height: 5.5vh;
+			}
+
+			.productCount, .salesCount {
+				font-size: 2vh;
+				width: 17vw;
+				line-height: 5.5vh;
+			}
+				
+			.productTalbe {
+				height: 5.5vh;
+			}
+			h5 {
+				font-size: 3vh;
+				padding-left: 2vh;
+			}
+			.middleTitle {
+				font-size: 2vh;
+			}
+
+			.salesGraphCanvas {
+				width: 100%;
+    			height: 100%;
+    			display: flex;
+    			justify-content: center;
+    			align-items: center;
+			}
+			.setCanvas {
+				display: block;
+				transform: scale(1.5);
+   		 		width: 95%;
+				height: 60%;
+				margin-left: 50vw;
+				margin-top: 2vh;
+			}
+		}
+		</style>
+	</head>
+	
+	<body>
+		<div id="todaySalesDashboard" class="salesDashBoard"></div>
+	<script>
+		class SalesDashboard{		
+			//===properties ====
+			jsonData = {};//실시간 값 더미
+			graphData = [];//canvas그래프 값 배열
+			//==================
+
+			constructor(idV, jsonAddress){
+				this.idV = idV;
+				this.jsonAddress = jsonAddress;
+
+				this.templateHTML();
+				this.makeAJAX();
+			}
+			//대시보드 만들기
+			templateHTML() {
+				document.getElementById(this.idV).innerHTML = 
+					`<div class="backgroundBoard">
+						
+						<div class="leftZone">
+							<h2 class="headerName">Sales Dashboard<span id="${this.idV}_todayDate" class="titleDate"></span></h2>
+							<div id="${this.idV}_todayData" class="todayData">
+								<div id="${this.idV}_todaySales" class="todaySales">
+									<div class="salesTitle1">총매출(원)</div>
+									<div id="${this.idV}_todaySalesPrice" class="todaySalesPrice1"></div>
+										<div class="countSales">
+											<i class="xi-caret-up"></i>
+											<span id="${this.idV}_salesChange"></span>
+										</div>
+								</div>
+								<div id="${this.idV}_todayOrder" class="todayOrder">
+									<div class="salesTitle2">누적 주문수(건)</div>
+									<div id="${this.idV}_todayOrders" class="todaySalesPrice2"></div>
+										<div class="countOrders">
+											<i class="xi-caret-up"></i>
+											<span id="${this.idV}_ordersChange"></span>
+										</div>
+								</div>
+							</div>
+							
+							<div id="${this.idV}_salesStatus" class="salesStatus">
+								<div class="titleZone">
+									<h5>매출 현황<span id="${this.idV}_todayDate2" class="middleTitle"></span><span class="middleTitle">시간대별</span></h5>
+									<span class="lineDetail"> ---- 총 매출 </span>
+								</div>
+								<div id="${this.idV}_salesGraphCanvas" class="salesGraphCanvas">
+									<canvas id="${this.idV}_viewGraph" class="setCanvas" width="580px" height="280px"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<div class="salesRankingTable">
+							<div class="inTable">
+							<h3>실시간 판매 상품 순위 TOP 10<span>현재 시간 기준</span></h3>
+							
+							<div id="${this.idV}_tableBox" class="productRankingTable">
+								<ul class="categorizeName">
+									<li class="rankingTitle">순위</li>
+									<li class="productName">상품명 (브랜드명)</li>
+									<li class="productCount">판매량<span>(개)</span></li>
+								</ul>
+								<div id="tempInfo">
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>`;
+			}//makeDashboard()
+
+			//0.AJAX로 실시간 데이터 출력 & 데이터에 따른 메소드 실행
+			makeAJAX(){
+				//today 날짜 입력
+				const todayDate = document.getElementById(this.idV+'_todayDate'); 
+				const todayDate2 = document.getElementById(this.idV+'_todayDate2'); 
+				//총 매출
+				const totalPrice = document.getElementById(this.idV+'_todaySalesPrice');
+				//누적 주문 수
+				const todayOrders = document.getElementById(this.idV+'_todayOrders');
+				//총 매출 시간당 증가량  
+				const salesChgValue = document.getElementById(this.idV+'_salesChange');
+				//주문 수 시간당 증가량
+				const ordersChange = document.getElementById(this.idV+'_ordersChange');
+				
+				const xhttp = new XMLHttpRequest();
+				xhttp.open("GET", this.jsonAddress + "?t=" + Math.random(), true);
+				xhttp.send();
+						
+				xhttp.onreadystatechange = () => {
+					if(xhttp.readyState == 4 && xhttp.status == 200 ){
+						this.jsonData = JSON.parse(xhttp.responseText);
+						
+						for(let i=0; i<24; i++){
+							setTimeout(()=>{
+							this.viewTotalData( this.jsonData[i+1], ordersChange, salesChgValue, todayOrders, totalPrice );
+								this.makeCanvasBox( this.jsonData[i+1] );
+								this.viewSalesProductOrder( this.jsonData[i+1] );
+								todayDate.innerHTML = this.jsonData['date'] + " " + (i+1) + "시";
+							}, 1000*i);
+						}			
+					todayDate2.innerHTML = this.jsonData['date'];
+					}
+					}
+			}//makeAJAX()
+
+			//1.누적 매출, 실시간 매출, 누적 판매량, 실시간 판매량 출력
+			viewTotalData( productValue, orderValueId, todaySalesId, ordersId, salesId) {
+				this.realTimeOrders = 0;	this.cumulativeOrders = 0;
+				this.realTimeSales = 0;		this.cumulativeSales = 0;
+
+				for (let j=0; j<productValue.length; j++){
+					this.cumulativeOrders += productValue[j].cumulativeOrder;
+					this.realTimeOrders += productValue[j].pdOrdersCnt;
+					this.realTimeSales += productValue[j].cumulativeOrder * productValue[j].pdPrice;
+					this.cumulativeSales += productValue[j].pdOrdersCnt * productValue[j].pdPrice;
+				}
+
+				//누적 판매량
+				orderValueId.innerHTML = this.realTimeOrders.toLocaleString();
+				//실시간 판매량
+				ordersId.innerHTML = this.cumulativeOrders.toLocaleString();
+				//실시간 매출 
+				salesId.innerHTML = this.realTimeSales.toLocaleString();
+				//누적 매출
+				todaySalesId.innerHTML = this.cumulativeSales.toLocaleString();
+				
+			}//viewTotalData()
+			
+			//2. 판매 상품 순위 TOP10
+			viewSalesProductOrder( productValue ) {
+				document.getElementById("tempInfo").innerHTML = '';
+				
+				//누적 판매량 내림차순으로 순위 나열
+				for(let j=0; j<productValue.length; j++){
+					productValue.sort((a, b)=>{
+						return b.cumulativeOrder - a.cumulativeOrder;
+					});
+				}		
+				
+				//등수 별 class
+				class ProductRankingList {
+					constructor( rankingId, productInfo ){
+						this.rankingId = rankingId;
+						this.productInfo = productInfo;
+						
+						//메소드 실행
+						this.printList();
+						this.inputInfo();
+					}
+					
+					//html 설계
+					printList () {
+						document.getElementById("tempInfo").innerHTML += `
+							<ul id="${this.rankingId}_productTable" class="productTalbe">
+								<li id="${this.rankingId}_rankingInfo" class="rankingInfo"></li>
+								<li id="${this.rankingId}_productInfo" class="productInfo"></li>
+								<li id="${this.rankingId}_salesCount" class="salesCount"></li>
+							</ul>
+						`;
+						if (this.rankingId == 0 ) {
+							document.getElementById(this.rankingId+"_productTable").style.backgroundColor = '#1d3557';
+							document.getElementById(this.rankingId+"_productTable").style.borderRadius = '10px';
+							document.getElementById(this.rankingId+"_productTable").style.marginTop = '0.5vh';
+							document.getElementById(this.rankingId+"_productTable").style.color = 'white';
+						} else {
+							document.getElementById(this.rankingId+"_productTable").style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
+							document.getElementById(this.rankingId+"_productTable").style.borderRadius = '10px';
+							document.getElementById(this.rankingId+"_productTable").style.marginTop = '1vh';
+						}
+					}
+
+					//정보 삽입
+					inputInfo () {
+						document.getElementById(this.rankingId+"_rankingInfo").innerHTML = this.rankingId + 1;
+						document.getElementById(this.rankingId+"_productInfo").innerHTML = this.productInfo["pdName"];
+						document.getElementById(this.rankingId+"_salesCount").innerHTML = this.productInfo["cumulativeOrder"];
+					}
+				}//PrdouctRankingList{}
+				
+				//인스턴스 생성
+				for(let i=0; i<productValue.length; i++){
+					if( i < 10 ){
+						const productRankingList = new ProductRankingList ( i, productValue[i] );
+					}
+				}
+			}//viewSalesProductOrder()
+
+			//3. CANVAS ZONE 메소드
+			makeCanvasBox ( totalOrders ) {
+				this.ordersValue = 0;
+				totalOrders.forEach((pdIf, pdNum) => {
+					this.ordersValue += pdIf["pdPrice"] * pdIf["cumulativeOrder"];
+				});
+				this.graphData.push(this.ordersValue);
+				
+				//class Canvas 
+				class ViewCanvas {
+					//properties=======
+						xAxisPadding = 40;
+						yAxisPadding = 80;
+						topPadding = 10;
+						yMax = 1000000000;
+						xMax = 24;
+					//===END properties =====
+
+					constructor( idV, graphData ) {
+						this.canvas = document.querySelector(`#${idV}`);
+						this.ctx = this.canvas.getContext("2d");
+						this.graphData = graphData;
+
+						window.addEventListener('resize', this.settingLength());
+						this.drawChart();
+					}
+
+					settingLength () {
+						this.canvasWidth = this.canvas.clientWidth;
+						this.canvasHeight = this.canvas.clientHeight;
+						this.chartWidth = this.canvasWidth - this.yAxisPadding;
+						this.chartHeight = this.canvasHeight - this.xAxisPadding  - this.topPadding;
+					}
+				
+					//차트 그리는 메소드
+					drawChart() {
+						this.settingLength();
+						const { ctx, canvasWidth, canvasHeight, chartHeight, chartWidth, xAxisPadding, yAxisPadding, topPadding, yMax, xMax, graphData } = this;
+						
+						ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+						ctx.beginPath();
+						ctx.moveTo( yAxisPadding, topPadding );
+					
+						//draw YAXIS
+						ctx.lineTo( yAxisPadding ,chartHeight + topPadding );
+						
+						//Y축 단위 설정
+						const yInterval = yMax / 5;
+						ctx.textAlign = "right";
+						for(let i=0; i<6; i++){
+							//Y축 범위 숫자 출력
+							const yValue = yInterval * i;
+							//y좌표 범위 숫자 간격
+							const yPoint = topPadding + chartHeight - yValue / yMax * chartHeight;
+							ctx.fillText(parseInt(yValue).toLocaleString(), yAxisPadding -4 , yPoint); // 간격 3px
+						}
+						
+						//draw XAXIS
+						ctx.lineTo( this.canvasWidth , chartHeight + topPadding );
+					
+						//X축 단위 설정
+						const xInterval = xMax / 6;
+						for(let i=0; i<7; i++){
+							//X축 범위 숫자 출력
+							const xValue = xInterval * i;
+							//x좌표 범위 숫자 간격
+							const xPoint = chartWidth - xValue / xMax * chartWidth ;
+							ctx.fillText( xMax - xValue, xPoint + yAxisPadding  , chartHeight + topPadding + 10 );
+						}
+						
+						/*ctx.setLineDash([0]);*/
+						ctx.lineWidth = 2;
+						ctx.strokeStyle = 'rgba(100, 100, 100, 0.8)';
+						ctx.stroke();
+						
+						//draw Y-UNIT
+						ctx.beginPath();
+						
+						for( let i=0; i<5; i++ ) {
+							ctx.moveTo(chartWidth + yAxisPadding , topPadding+ (chartHeight / 5) * i );
+							ctx.lineTo( 0 + yAxisPadding, topPadding + (chartHeight / 5) * i );
+						}
+						ctx.lineWidth = 1;
+						ctx.stroke();				
+
+						//draw DATA
+						ctx.beginPath();
+						
+						graphData.forEach((salesSum, index)=>{
+							const xPoint = yAxisPadding + ( (index+1) * (chartWidth / xMax) ) ;
+							const yPoint1 = chartHeight + topPadding -1 - graphData[index-1] * ( chartHeight / yMax * 10 );
+							const yPoint2 = chartHeight + topPadding -1 - graphData[index] * ( chartHeight / yMax * 10 );
+							
+							if( !index ) {
+								ctx.moveTo( yAxisPadding , chartHeight + topPadding );
+								ctx.lineTo( xPoint , chartHeight + topPadding - 1  - (graphData[0] * ( chartHeight / yMax * 10 )) );
+							}else {
+								ctx.moveTo( xPoint - ( chartWidth / xMax ), yPoint1 ); 
+								ctx.lineTo( xPoint , yPoint2 );
+							}
+						});
+						
+						/*ctx.setLineDash([0]);*/
+						ctx.lineWidth = 2;
+						ctx.strokeStyle = '#1b4332';
+						ctx.stroke();
+					}//drawChart()
+
+				}//viewCanvas{}
+				const viewCanvas = new ViewCanvas( this.idV+'_viewGraph', this.graphData );
+			}//makeCanvasBox()
+			
+		}//SalesDashboard{}
+		(main = () => {	
+			let todaySalesList = new SalesDashboard("todaySalesDashboard", "python_data/SalesData_product.json");
+		})();
+	</script>
+	</body>
+</html>

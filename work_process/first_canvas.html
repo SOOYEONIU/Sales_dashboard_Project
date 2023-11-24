@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8">
+		<link ="stylesheet" type="text/css" href="path/to/xeicon/xeicon.min.css">
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+		<title>Sales Dashboard</title>
+		<style>
+			*{ margin: 0; padding: 0; font-family: 'SUIT-Regular'; list-style:none;}
+			/*제목 글씨체*/
+			@font-face {
+ 			   font-family: 'Cafe24Dangdanghae';
+			   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.2/Cafe24Dangdanghae.woff') format('woff');
+			   font-weight: normal;
+ 			   font-style: normal;
+			}
+			/*본문체*/
+			@font-face {
+ 			   font-family: 'SUIT-Regular';
+			   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+			   font-weight: normal;
+ 			   font-style: normal;
+			}
+			/*배경색*/
+			body {
+				/*background: linear-gradient(45deg, white, #3b3b67);*/
+				/*width: 100%;*/
+				background-color: #F5F6FA;
+			}
+			/*매출 대시보드 큰 틀*/
+			.salesDashBoard {
+				color: #333;
+				min-height: 100vh;
+				min-width: 100vw;
+				display: flex;
+				justify-content: center; align-items: center;
+			}
+			/*배경 틀*/
+			.backgroundBoard {
+				width: 1090px; height: 620px;
+				/*background-color: pink;*/
+				display: flex;
+			}
+			.leftZone {
+				width: 675px; height: 620px;
+			}
+			
+			/*Dashboard 제목*/
+			.headerName {
+				width: 670px;
+				color: #333;
+				font-family: 'Cafe24Dangdanghae';
+				font-size: 35px;
+			}
+				/*오늘 날짜*/
+				[id*="todayDate"] {
+					font-size: 15px;
+					padding-left: 5px;
+					margin-right: -5px;
+				}
+			
+			/*오늘 총매출& 주문수*/
+			.todayData {
+				width: 675px; height: 200px;
+				/*background-color: skyblue;*/
+				margin-top: 10px; margin-bottom: 10px;
+				text-align: center;
+				display: flex;
+				justify-content: space-between;
+			}
+				.todaySales, .todayOrder {
+					width: 330px; height: 190px;
+					/*background-color: rgb(249, 243, 231);*/
+					background-color: rgba(255, 255, 255, 0.9);
+					border-radius: 2px;
+					border: 1px solid rgba(100, 100, 100, 0.5);
+					line-height: 64px;
+					display: inline-block; float: left;
+					box-shadow: 
+				}
+					.salesTitle { font-size: 20px; text-align: left; margin-left: 20px;}
+					.todaySalesPrice { font-size: 40px; font-weight: bold; }
+					.yesterdaySales { font-size: 18px; }
+					/*매줄이나 주문수가 떨어지면 파란색, 화살표 아래 방향으로 표시*/
+					/*.percentValue1 { font-size: 18px; color: red; margin-left: 5px; }
+					.percentValue2 { font-size: 18px; color: blue; margin-left: 5px; }*/
+					.countSales	{ font-size: 18px; color: red; }
+					.countOrders { font-size: 18px; color: red; }
+			/*시간대별 매출현황*/
+			.salesStatus {
+				width: 675px; height: 365px;
+				/*background-color: rgb(249, 243, 231);*/
+				background-color: rgba(255, 255, 255, 0.9);
+				border-radius: 2px;
+				border: 1px solid rgba(100, 100, 100, 0.5);
+				position: relative;
+			}
+			/*매출현황 도표 제목*/
+			h5 { 
+				font-size: 25px;
+				padding-left: 20px; padding-top: 15px;
+			}
+			/*시간대별*/
+			h5 > span { font-size: 15px; margin-left: 10px; }
+			/*캔버스로 그래프 만들기 예비값*/
+			.salesGraphCanvas {
+				width: 600px; height: 300px;
+				/*background-color: gray;
+				border: 1px solid black;*/
+				position: absolute;
+				top: 50px; left: 50%; margin-left: -300px;
+				margin-top : 10px;
+			}
+		
+			/*판매 상품 순위 top10(오늘 기준)*/
+			.salesRankingTable {
+				width: 400px; height: 620px;
+				/*background-color: rgb(249, 243, 231);*/
+				background-color: rgba(255, 255, 255, 0.95);
+				border-radius: 2px;
+				border: 1px solid rgba(100, 100, 100, 0.5);
+				margin-left: 15px;
+			}
+				/*소 제목*/
+				h3 {
+					font-size: 20px;
+					margin-top: 30px; margin-left: 30px;
+				}
+				h3 > span {
+					font-size: 12px; font-weight: normal;
+					margin-left: 10px;
+				}
+				/*Table 틀*/
+				.productRankingTable {
+					width: 340px; height: 507px;
+					margin-left: 30px; margin-top: 20px;
+					border-bottom: 1px solid rgba(100, 100, 100, 0.5);
+				}
+				ul {
+					display:flex;
+					line-height: 45px;
+				}
+				/*표 setting*/
+				.categorizeName { background-color: #EAEAEA; border-top: 1px solid rgba(100, 100, 100, 0.5) }
+				.rankingTitle { width: 50px; text-align: center; font-size: 15px; }
+				.productName { width: 180px; text-align: center; font-size: 15px; }
+				.productCount { width: 110px; text-align: center; font-size: 15px; }	
+				.rankingInfo { width: 50px; text-align: center; }
+				.productInfo { 
+					width: 175px; height: 45px; text-align: left; 
+					padding-left: 5px; 
+
+					font-weight: bold; font-size: 9px; 
+					overflow: hidden; 
+					white-space: nowrap; 
+					text-overflow: ellipsis;
+					/*white-space: wrap;*/
+				}	
+				.salesCount { 
+					width: 95px; text-align: right; 
+					padding-right: 15px;
+					color: red;
+				}
+		</style>
+	</head>
+	
+	<body>
+		<div id="todaySalesDashboard" class="salesDashBoard"></div>
+	
+	<script>
+		class SalesDashboard{
+			//===properties ====
+			jsonData = {};//실시간 값 더미
+
+			constructor(idV, jsonAddress){
+				this.idV = idV;
+				this.jsonAddress = jsonAddress;
+			}
+			//==================
+
+			//대시보드 만들기
+			makeDashboard () {
+				document.getElementById(this.idV).innerHTML = 
+					`<div class="backgroundBoard">
+						
+						<div class="leftZone">
+							<h2 class="headerName">Sales Dashboard<span id="${this.idV}_todayDate"></span></h2>
+							<div id="${this.idV}_todayData" class="todayData">
+								<div id="${this.idV}_todaySales" class="todaySales">
+									<div class="salesTitle">총매출(원)</div>
+									<div id="${this.idV}_todaySalesPrice" class="todaySalesPrice"></div>
+										<div class="countSales">
+											<i class="xi-caret-up"></i>
+											<span id="${this.idV}_salesChange"></span>
+										</div>
+								</div>
+								<div id="${this.idV}_todayOrder" class="todayOrder">
+									<div class="salesTitle">누적 주문수(건)</div>
+									<div id="${this.idV}_todayOrders" class="todaySalesPrice"></div>
+										<div class="countOrders">
+											<i class="xi-caret-up"></i>
+											<span id="${this.idV}_ordersChange"></span>
+										</div>
+								</div>
+							</div>
+							
+							<div id="${this.idV}_salesStatus" class="salesStatus">
+								<h5>매출현황<span id="${this.idV}_todayDate2"></span><span>시간대별</span></h5>
+								<div id="${this.idV}_salesGraphCanvas" class="salesGraphCanvas">
+									<canvas id="${this.idV}_viewGraph" width="550" height="300"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<div class="salesRankingTable">
+							<h3>실시간 판매 상품 순위 TOP 10<span>오늘 기준</span></h3>
+							
+							<div id="${this.idV}_tableBox" class="productRankingTable">
+								<ul class="categorizeName">
+									<li class="rankingTitle">순위</li>
+									<li class="productName">상품명 (브랜드명)</li>
+									<li class="productCount">누적 판매량<span>(개)</span></li>
+								</ul>
+								<div id="tempInfo">
+								</div>
+							</div>
+						</div>
+					</div>`;
+			}//makeDashboard()
+
+			
+			//AJAX로 실시간 데이터 출력
+			//JSONData( jsonFile ) {
+			makeAJAX(){
+				//today 날짜 입력 !
+				const todayDate = document.getElementById(this.idV+'_todayDate'); 
+				const todayDate2 = document.getElementById(this.idV+'_todayDate2'); 
+				//총 매출
+				const totalPrice = document.getElementById(this.idV+'_todaySalesPrice');
+				//누적 주문 수 !
+				const todayOrders = document.getElementById(this.idV+'_todayOrders');
+				//총 매출 시간당 증가량  
+				const salesChgValue = document.getElementById(this.idV+'_salesChange');
+				//주문 수 시간당 증가량
+				const ordersChange = document.getElementById(this.idV+'_ordersChange');
+				
+					const xhttp = new XMLHttpRequest();
+					xhttp.open("GET", this.jsonAddress + "?t=" + Math.random(), true);
+					xhttp.send();
+						
+					xhttp.onreadystatechange = () => {
+						if(xhttp.readyState == 4 && xhttp.status == 200 ){
+							this.jsonData = JSON.parse(xhttp.responseText);
+						
+							for(let i=0; i<24; i++){
+								setTimeout(()=>{
+									this.viewTotalData( this.jsonData[i+1], ordersChange, salesChgValue, todayOrders, totalPrice );
+									//document.getElementById("tempInfo").innerHTML = '';
+									this.viewSalesProductOrder( this.jsonData[i+1] );
+									todayDate.innerHTML = this.jsonData['date'] + " " + (i+1) + "시";
+								}, 1000*i);
+							}			
+						
+						todayDate2.innerHTML = this.jsonData['date'];
+						// 여기서 함수 실행 시키기
+						}
+					}
+			}//makeAJAX()
+
+			//1.누적 주문수, 실시간 주문수, 누적 판매량, 실시간 판매량 출력
+			viewTotalData( productValue, orderValueId, todaySalesId, ordersId, salesId) {
+				this.realTimeOrders = 0;	this.cumulativeOrders = 0;
+				this.realTimeSales = 0;		this.cumulativeSales = 0;
+
+				for (let j=0; j<productValue.length; j++){
+					this.cumulativeOrders += productValue[j].cumulativeOrder;
+					this.realTimeOrders += productValue[j].pdOrdersCnt;
+					this.realTimeSales += productValue[j].cumulativeOrder * productValue[j].pdPrice;
+					this.cumulativeSales += productValue[j].pdOrdersCnt * productValue[j].pdPrice;
+				}
+
+				//누적 주문수
+				orderValueId.innerHTML = this.realTimeOrders.toLocaleString();
+				//실시간 주문수
+				ordersId.innerHTML = this.cumulativeOrders.toLocaleString();
+				//실시간 판매량
+				salesId.innerHTML = this.realTimeSales.toLocaleString();
+				//누적 판매량
+				todaySalesId.innerHTML = this.cumulativeSales.toLocaleString();
+			}//viewTotalData()
+			
+
+			//2. 판매 상품 순위 TOP10
+			viewSalesProductOrder( productValue ) {
+				document.getElementById("tempInfo").innerHTML = '';
+				
+				//누적 판매량 내림차순으로 순위 나열
+				for(let j=0; j<productValue.length; j++){
+					productValue.sort((a, b)=>{
+						return b.cumulativeOrder - a.cumulativeOrder;
+					});
+				}		
+				
+				//등수 별 class
+				class ProductRankingList {
+					
+					constructor( rankingId, productInfo ){
+						this.rankingId = rankingId;
+						this.productInfo = productInfo;
+						
+						//메소드 안에서 실행
+						this.printList();
+						this.inputInfo();
+					}
+					
+					//html 설계
+					printList () {
+						document.getElementById("tempInfo").innerHTML += `
+							<ul id="${this.rankingId}_productTable" class="productTalbe">
+								<li id="${this.rankingId}_rankingInfo" class="rankingInfo"></li>
+								<li id="${this.rankingId}_productInfo" class="productInfo"></li>
+								<li id="${this.rankingId}_salesCount" class="salesCount"></li>
+							</ul>
+						`;			
+						document.getElementById(this.rankingId+"_productTable").style.borderTop = '0.8px solid rgba(100, 100, 100, 0.5)';
+						
+					}
+
+					//정보 삽입
+					inputInfo () {
+						
+								document.getElementById(this.rankingId+"_rankingInfo").innerHTML = this.rankingId + 1;
+								//	console.log(this.productInfo);
+				
+								document.getElementById(this.rankingId+"_productInfo").innerHTML = this.productInfo["pdName"];
+								document.getElementById(this.rankingId+"_salesCount").innerHTML = this.productInfo["cumulativeOrder"];
+					}
+				}//PrdouctRankingList{}
+				for(let i=0; i<productValue.length; i++){
+					if( i < 10 ){
+						const productRankingList = new ProductRankingList ( i, productValue[i] );
+					}
+				}
+			}//viewSalesProductOrder()
+
+			//3. 캔버스
+			makeCanvasBox () {
+				//console.log(this.commonSum(this.productOrderNum));
+				class ViewCanvas {
+					//properties=======
+						xAxisPadding = 40;
+						yAxisPadding = 100;
+						topPadding = 10;
+						yMax = 15000000000;
+						xMax = 24;
+					//===END properties =====
+
+					constructor( idV ) {
+						this.canvas = document.getElementById(idV);
+						this.ctx = this.canvas.getContext("2d");
+						//this.xMax = hour;
+						this.canvasWidth = this.canvas.clientWidth;
+						this.canvasHeight = this.canvas.clientHeight;
+						this.chartWidth = this.canvasWidth - this.yAxisPadding;
+						this.chartHeight = this.canvasHeight - this.xAxisPadding  - this.topPadding;
+							
+						this.drawChart();
+						this.drawPixel(4, 2000000000);
+					}
+					//점찍는 메소드
+					drawPixel( locX, locY ) {
+						//let [ locX, locY ] = [ x, y ];
+					//	x=this.
+						this.ctx.fillRect( locX, locY, 1, 1 );
+					}
+					
+					//차트 그리는 메소드
+					drawChart() {
+						const { ctx, canvasWidth, canvasHeight, chartHeight, chartWidth, xAxisPadding, yAxisPadding, topPadding, yMax, xMax } = this;
+						
+						ctx.beginPath();
+						ctx.moveTo( yAxisPadding, topPadding );
+						//draw YAXIS
+						ctx.lineTo( yAxisPadding ,chartHeight + topPadding );
+						const yInterval = yMax / 5;
+						ctx.textAlign = "right";
+						for(let i=0; i<6; i++){
+							const yValue = i * yInterval;
+							//y좌표 범위 숫자 간격
+							const yPoint = topPadding + chartHeight - yValue / yMax * chartHeight;
+							ctx.fillText(parseInt(yValue).toLocaleString(), yAxisPadding-4  , yPoint);
+						}
+						
+						
+						//draw XAXIS
+						ctx.lineTo( this.canvasWidth , chartHeight + topPadding );
+						
+						/*
+						const xInterval = xMax / 6;
+						for(let i=0; i<7; i++){
+							const xValue = xInterval * i;
+							const xPoint = chartWidth - xValue / xMax * chartWidth ;
+							ctx.fillText( xMax - xValue, xPoint + yAxisPadding , chartHeight + topPadding + 10);
+						}
+						*/
+						ctx.stroke();
+					}//drawChart()
+
+				}//viewCanvas{}
+				const viewCanvas = new ViewCanvas( this.idV+'_viewGraph' );
+			}//makeCanvasBox()
+
+			
+		}//SalesDashboard{}
+		let todaySalesList = new SalesDashboard("todaySalesDashboard", "python_data/SalesData_product.json");
+		todaySalesList.makeDashboard();
+		todaySalesList.makeAJAX();
+		todaySalesList.makeCanvasBox();
+	</script>
+	</body>
+</html>
