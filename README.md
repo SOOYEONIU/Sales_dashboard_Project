@@ -1,4 +1,4 @@
-# Sales dashboard Project
+﻿# Sales dashboard Project
 ------------------
 ## 프로젝트 계획이유
 > python과 javascript의 비동기 처리 방식을 학습하여 실시간으로 판매되는 정보를 담은 쇼핑몰의 판매 대시보드를 제작하게 되었다.
